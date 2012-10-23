@@ -1,0 +1,10 @@
+W, Walkway
+1, Conservatory
+2, Indoor Pool
+3, Kitchen
+4, Study
+5, Dining Room
+6, Living Room
+7, Entryway
+8, Library
+9, Tower
