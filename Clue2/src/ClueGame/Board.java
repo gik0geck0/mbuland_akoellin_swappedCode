@@ -23,6 +23,16 @@ public class Board {
 	public void loadConfigFiles() {
 		loadLegend();
 		loadBoard();
+		loadPlayers();
+		loadDeck();
+	}
+	
+	private void loadPlayers() {
+		
+	}
+	
+	private void loadDeck() {
+		
 	}
 
 	private void loadLegend() {
