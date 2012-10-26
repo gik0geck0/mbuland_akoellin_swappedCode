@@ -8,8 +8,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import ClueGame.Board;
-import ClueGame.BoardCell;
+import ClueGame.Board.Board;
+import ClueGame.Board.BoardCell;
 
 public class BoardPathingTests {
 
