@@ -29,4 +29,8 @@ public class Player {
 		b.calcTargets(currentPosition, roll);
 		targets = b.getTargets();
 	}
+	
+	public void dealCards(List<Card> hand) {
+		this.hand = hand;
+	}
 }

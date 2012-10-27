@@ -24,8 +24,12 @@ public class Board {
 	private Map<Integer, LinkedList<Integer>> adjMtx = new HashMap<Integer, LinkedList<Integer>>();
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private List<Card> deck = new ArrayList<Card>();
-	private List<Player> players = new ArrayList<Player>();
+	private List<Player> players;
 	private int whoseTurn;
+	
+	public void setPlayers(List<Player> playList) {
+		players = playList;
+	}
 
 	public void loadConfigFiles() {
 		loadLegend();
@@ -256,5 +260,9 @@ public class Board {
 	
 	public boolean solutionContainsCard(Card c) {
 		return false;
+	}
+	
+	public Card disproveSuggestion(Player suggester, String person, String weapon, String room) {
+		return null;
 	}
 }

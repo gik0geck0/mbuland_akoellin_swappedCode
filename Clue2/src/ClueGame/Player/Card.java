@@ -1,5 +1,7 @@
 package ClueGame.Player;
 
+import ClueGame.Player.Card.Type;
+
 public class Card {
 	public enum Type {
 		PERSON,
@@ -9,6 +11,11 @@ public class Card {
 	
 	private String name;
 	private Type type;
+	
+	public Card(String string, Type cardType) {
+		name = string;
+		type = cardType;
+	}
 	
 	public Type getType() { return type; }
 	public void setType(Type type) { this.type = type; }

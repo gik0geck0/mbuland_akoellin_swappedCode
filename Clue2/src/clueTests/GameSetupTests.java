@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -106,8 +107,53 @@ public class GameSetupTests {
 	
 	@Test
 	public void testDisproveSuggestion() {
-		Player comp =  brd.getPlayers().get(2);
-		Card c = comp.disproveSuggestion("Jim", "The Magic Schoolbus", "Indoor Pool");
+		List<Player> comp1 = new ArrayList<Player>();
+		comp1.add(new ComputerPlayer());
+		brd.setPlayers(comp1);
+		Player comp = brd.getPlayers().get(0);
+		
+		List<Card> hand = new ArrayList<Card>();
+		hand.add(new Card("Jim", Card.Type.PERSON));
+		hand.add(new Card("Kitchen", Card.Type.ROOM));
+		hand.add(new Card("M1A1 Abrahms Tank", Card.Type.WEAPON));
+		comp.dealCards(hand);
+		Card c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		assertTrue(c.equals(hand.get(0)));
+		
+		hand = new ArrayList<Card>();
+		hand.add(new Card("Jim", Card.Type.PERSON));
+		hand.add(new Card("Kitchen", Card.Type.ROOM));
+		hand.add(new Card("The Magic Schoolbus", Card.Type.WEAPON));
+		comp.dealCards(hand);
+		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		assertTrue(c.equals(hand.get(0)) || c.equals(hand.get(2)));
+		
+		hand = new ArrayList<Card>();
+		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));
+		hand.add(new Card("Kitchen", Card.Type.ROOM));
+		hand.add(new Card("Cotton Balls", Card.Type.WEAPON));
+		comp.dealCards(hand);
+		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		assertTrue(c == null);
+		
+		comp1.add(new ComputerPlayer());
+		
+		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		
+		List<Player> hum1 = new ArrayList<Player>();
+		hum1.add(new ComputerPlayer());
+		brd.setPlayers(hum1);
+		
+		Player hum =  brd.getPlayers().get(0);
+		hand = new ArrayList<Card>();
+		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));
+		hand.add(new Card("Indoor Pool", Card.Type.ROOM));
+		hand.add(new Card("M1A1 Abrahms Tank", Card.Type.WEAPON));
+		hum.dealCards(hand);
+		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		assertTrue(c.equals(hand.get(0)));
+		
+		hum.disproveSuggestion("Dr. Nefarious", "M1A1 Abrahms Tank", "Indoor Pool");
 	}
 	
 	
