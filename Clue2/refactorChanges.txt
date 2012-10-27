@@ -1,0 +1,3 @@
+We added 2 packages: ClueGame.Board, and ClueGame.Player
+	All the Board stuff went into the Board package
+	All the Player stuff went into the Player package
