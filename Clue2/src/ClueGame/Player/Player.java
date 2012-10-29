@@ -9,6 +9,14 @@ import ClueGame.Board.BoardCell;
 
 public class Player {
 	private String name;
+	public Player(String name) {
+		super();
+		this.name = name;
+	}
+	public Player() {
+		super();
+	}
+	
 	private List<Card> hand;
 	private int currentPosition;
 	private Set<BoardCell> targets;

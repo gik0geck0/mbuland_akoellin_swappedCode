@@ -30,6 +30,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void deckPreDeal() {
+		// will check to make sure that there are 9 rooms + 6 weapons + 5 players. also makes sure that a particular card is read.
 		List<Card> testList = brd.getDeck();
 		assertEquals(20, testList.size());
 		int rooms = 0;
@@ -66,6 +67,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void postDeal() {
+		//checks to make sure no player has the solution cards, also makes sure that every one has no more than one card than any other player.
 		boolean someoneHasSolutionCards = false;
 		boolean everyOneHasSameNUMBERCards = true;
 		for (Player p : brd.getPlayers()) {
@@ -82,6 +84,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
+		//will check to make sure a true accusation comes back correct and every field will return false when it is wrong
 		assertTrue(brd.checkAccusation("Dr. Nefarious", "Flying Spaghetti Monster", "Tower"));
 		
 		assertFalse(brd.checkAccusation("Jim", "Flying Spaghetti Monster", "Tower"));
@@ -91,6 +94,7 @@ public class GameSetupTests {
 	
 	@Test 
 	public void testTargetSelction() {
+		//checks that over 1000 thousand rolls will hit every square
 		ComputerPlayer comp = new ComputerPlayer();
 		Set<BoardCell> rolls = new HashSet<BoardCell>();
 		
@@ -111,7 +115,7 @@ public class GameSetupTests {
 		comp1.add(new ComputerPlayer());
 		brd.setPlayers(comp1);
 		Player comp = brd.getPlayers().get(0);
-		
+		//checks a player with person card correct
 		List<Card> hand = new ArrayList<Card>();
 		hand.add(new Card("Jim", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
@@ -119,7 +123,7 @@ public class GameSetupTests {
 		comp.dealCards(hand);
 		Card c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
 		assertTrue(c.equals(hand.get(0)));
-		
+		//checks a player with weapon card correct
 		hand = new ArrayList<Card>();
 		hand.add(new Card("Jim", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
@@ -127,7 +131,7 @@ public class GameSetupTests {
 		comp.dealCards(hand);
 		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
 		assertTrue(c.equals(hand.get(0)) || c.equals(hand.get(2)));
-		
+		//checks a player with none of the cards so that player returns a null card
 		hand = new ArrayList<Card>();
 		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
@@ -143,7 +147,7 @@ public class GameSetupTests {
 		List<Player> hum1 = new ArrayList<Player>();
 		hum1.add(new ComputerPlayer());
 		brd.setPlayers(hum1);
-		
+		//checks a human players cards with a correct room
 		Player hum =  brd.getPlayers().get(0);
 		hand = new ArrayList<Card>();
 		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));

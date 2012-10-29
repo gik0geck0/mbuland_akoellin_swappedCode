@@ -1,5 +1,6 @@
 package ClueGame.Board;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class Board {
 	private Map<Integer, LinkedList<Integer>> adjMtx = new HashMap<Integer, LinkedList<Integer>>();
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private List<Card> deck = new ArrayList<Card>();
-	private List<Player> players;
+	private List<Player> players = new ArrayList<Player>();
 	private int whoseTurn;
 	
 	public void setPlayers(List<Player> playList) {
@@ -39,10 +40,55 @@ public class Board {
 	}
 	
 	private void loadPlayers() {
-		
+		try {
+			FileReader read = new FileReader("people.txt");
+			Scanner scan = new Scanner(read);
+			String person;
+			while(scan.hasNextLine()) {
+				person = scan.nextLine();
+				players.add(new Player(person));
+			}
+		} catch(FileNotFoundException e){
+			e.getStackTrace();
+		}
 	}
 	
 	private void loadDeck() {
+		try {
+			//load player cards
+			FileReader read = new FileReader("people.txt");
+			Scanner scan = new Scanner(read);
+			int i = 0;
+			while(scan.hasNextLine()) {
+				deck.add(i, new Card(scan.nextLine(), Card.Type.PERSON));
+				++i;
+			}
+			
+			//load weapon cards
+			read = new FileReader("weapons.txt");
+			scan = new Scanner(read);
+			while(scan.hasNextLine()) {
+				deck.add(i, new Card(scan.nextLine(), Card.Type.WEAPON));
+				++i;
+			}
+			
+			//load rooms
+			read = new FileReader("legenBoard.txt");
+			scan = new Scanner(read);
+			String in = "";
+			String name = "";
+			while (scan.hasNextLine()) {
+				in = scan.nextLine();
+				String[] vars = in.split(", ");
+				name = vars[1].substring(0);
+				char n = vars[0].charAt(0);
+				if (n != 'W')
+					deck.add(i, new Card(name, Card.Type.ROOM));
+					++i;
+			}
+		} catch (FileNotFoundException e) {
+			e.getStackTrace();
+		}
 		
 	}
 
