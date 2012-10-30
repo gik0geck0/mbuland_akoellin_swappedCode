@@ -39,6 +39,33 @@ public class Player {
 	}
 	
 	public void dealCards(List<Card> hand) {
-		this.hand = hand;
+		int extraCards = hand.size() % 5; // used to handel other players getting one more card
+		int cardsLeft = hand.size();
+		int randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
+		if(!this.hand.isEmpty()){
+			if (extraCards > 0) {
+				while(this.hand.size() != 4){
+					this.hand.add(hand.get(randomNum));
+					hand.remove(randomNum);
+					cardsLeft--;
+					randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
+				}
+				extraCards--;
+			}
+
+			else {
+				while(this.hand.size() != 3){
+					this.hand.add(hand.get(randomNum));
+					hand.remove(randomNum);
+					cardsLeft--;
+					randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
+				}
+			}
+		}
+		else {
+			this.hand.add(hand.get(randomNum));
+			hand.remove(randomNum);
+		}
+
 	}
 }

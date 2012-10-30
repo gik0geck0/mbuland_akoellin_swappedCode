@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ public class Board {
 	private List<Card> deck = new ArrayList<Card>();
 	private List<Player> players = new ArrayList<Player>();
 	private int whoseTurn;
+	private String answerPerson;
+	private String answerWeapon;
+	private String answerRoom;
 	
 	public void setPlayers(List<Player> playList) {
 		players = playList;
@@ -73,7 +77,7 @@ public class Board {
 			}
 			
 			//load rooms
-			read = new FileReader("legenBoard.txt");
+			read = new FileReader("legendBoard.txt");
 			scan = new Scanner(read);
 			String in = "";
 			String name = "";
@@ -82,9 +86,10 @@ public class Board {
 				String[] vars = in.split(", ");
 				name = vars[1].substring(0);
 				char n = vars[0].charAt(0);
-				if (n != 'W')
+				if (n != 'W'){
 					deck.add(i, new Card(name, Card.Type.ROOM));
 					++i;
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.getStackTrace();
@@ -281,7 +286,36 @@ public class Board {
 	}
 	
 	public void deal(List<Card> deck) {
+		//sets aside accusation
+		int randomNum = Math.abs((new Random()).nextInt() % 20);
+		//pick a random player card
+		//keeps rolling if the card at the index is not a person card
+		while(deck.get(randomNum).getType() != Card.Type.PERSON) {
+			randomNum = Math.abs((new Random()).nextInt() % 20);
+		}
+		answerPerson = deck.get(randomNum).getName();
+		deck.remove(randomNum);
+		//pick random weapon card
+		randomNum = Math.abs((new Random()).nextInt() % 19);
+		while(deck.get(randomNum).getType() != Card.Type.WEAPON) {
+			randomNum = Math.abs((new Random()).nextInt() % 19);
+		}
+		answerWeapon = deck.get(randomNum).getName();
+		deck.remove(randomNum);
+		//pick random room card
+		randomNum = Math.abs((new Random()).nextInt() % 18);
+		while(deck.get(randomNum).getType() != Card.Type.ROOM) {
+			randomNum = Math.abs((new Random()).nextInt() % 18);
+		}
+		answerRoom = deck.get(randomNum).getName();
+		deck.remove(randomNum);
 		
+		//evenly deal out all other cards *note some player will get more than others, due to 17 not being divisible by 5
+
+		for(Player p : players){
+			p.dealCards(deck);
+			
+		}
 	}
 	
 	public void deal() {

@@ -25,7 +25,8 @@ public class GameSetupTests {
 	@Before
 	public void init() {
 		brd = new Board();
-		brd.deal();
+		brd.loadConfigFiles();
+		
 	}
 	
 	@Test
@@ -44,15 +45,15 @@ public class GameSetupTests {
 		for (Card c : testList) {
 			switch (c.getType()) {
 			case PERSON:
-				if (c.getName() == "Dr. Nefarious")
+				if (c.getName().equals("Dr. Nefarious"))
 					personNamesWork = true;
 				people++; break;
 			case ROOM:
-				if (c.getName() == "Tower")
+				if (c.getName().equals("Tower"))
 					roomNamesWork = true;
 				rooms++; break;
 			case WEAPON:
-				if (c.getName() == "Flying Spaghetti Monster")
+				if (c.getName().equals("Flying Spaghetti Monster"))
 					weaponNamesWork = true;
 				weapons++; break;
 			}
@@ -67,6 +68,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void postDeal() {
+		brd.deal();
 		//checks to make sure no player has the solution cards, also makes sure that every one has no more than one card than any other player.
 		boolean someoneHasSolutionCards = false;
 		boolean everyOneHasSameNUMBERCards = true;
