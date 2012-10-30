@@ -7,7 +7,7 @@ import java.util.Set;
 import ClueGame.Board.Board;
 import ClueGame.Board.BoardCell;
 
-public class Player {
+public abstract class Player {
 	private String name;
 	public Player(String name) {
 		super();
@@ -17,16 +17,21 @@ public class Player {
 		super();
 	}
 	
-	private List<Card> hand;
+	protected List<Card> hand;
 	private int currentPosition;
 	private Set<BoardCell> targets;
 	
 	public Set<BoardCell> getTargets(){
 		return targets;
 	}
-	public Card disproveSuggestion(String person, String weapon, String room) {
-		return null;
+	
+	public Set<BoardCell> calcTargets(int roll, Board brd) {
+		brd.calcTargets(currentPosition, roll);
+		targets = brd.getTargets();
+		return getTargets();
 	}
+	
+	abstract public Card disproveSuggestion(String person, String weapon, String room);
 	
 	public List<Card> getCards() {
 		return hand;
@@ -38,34 +43,7 @@ public class Player {
 		targets = b.getTargets();
 	}
 	
-	public void dealCards(List<Card> hand) {
-		int extraCards = hand.size() % 5; // used to handel other players getting one more card
-		int cardsLeft = hand.size();
-		int randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
-		if(!this.hand.isEmpty()){
-			if (extraCards > 0) {
-				while(this.hand.size() != 4){
-					this.hand.add(hand.get(randomNum));
-					hand.remove(randomNum);
-					cardsLeft--;
-					randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
-				}
-				extraCards--;
-			}
-
-			else {
-				while(this.hand.size() != 3){
-					this.hand.add(hand.get(randomNum));
-					hand.remove(randomNum);
-					cardsLeft--;
-					randomNum = Math.abs((new Random()).nextInt() % cardsLeft);
-				}
-			}
-		}
-		else {
-			this.hand.add(hand.get(randomNum));
-			hand.remove(randomNum);
-		}
-
+	public void giveHand(List<Card> hand) {
+		this.hand = hand;
 	}
 }

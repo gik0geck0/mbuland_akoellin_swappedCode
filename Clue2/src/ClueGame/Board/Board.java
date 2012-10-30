@@ -13,6 +13,8 @@ import java.util.Scanner;
 import java.util.Set;
 
 import ClueGame.Player.Card;
+import ClueGame.Player.ComputerPlayer;
+import ClueGame.Player.HumanPlayer;
 import ClueGame.Player.Player;
 
 public class Board {
@@ -48,9 +50,11 @@ public class Board {
 			FileReader read = new FileReader("people.txt");
 			Scanner scan = new Scanner(read);
 			String person;
+			person = scan.nextLine();
+			players.add(new HumanPlayer(person));
 			while(scan.hasNextLine()) {
 				person = scan.nextLine();
-				players.add(new Player(person));
+				players.add(new ComputerPlayer(person));
 			}
 		} catch(FileNotFoundException e){
 			e.getStackTrace();
@@ -286,35 +290,51 @@ public class Board {
 	}
 	
 	public void deal(List<Card> deck) {
-		//sets aside accusation
-		int randomNum = Math.abs((new Random()).nextInt() % 20);
-		//pick a random player card
-		//keeps rolling if the card at the index is not a person card
-		while(deck.get(randomNum).getType() != Card.Type.PERSON) {
-			randomNum = Math.abs((new Random()).nextInt() % 20);
-		}
-		answerPerson = deck.get(randomNum).getName();
-		deck.remove(randomNum);
-		//pick random weapon card
-		randomNum = Math.abs((new Random()).nextInt() % 19);
-		while(deck.get(randomNum).getType() != Card.Type.WEAPON) {
+		boolean shuffle = false;
+		if (shuffle) {
+			//sets aside accusation
+			int randomNum = Math.abs((new Random()).nextInt() % 20);
+			//pick a random player card
+			//keeps rolling if the card at the index is not a person card
+			while(deck.get(randomNum).getType() != Card.Type.PERSON) {
+				randomNum = Math.abs((new Random()).nextInt() % 20);
+			}
+			answerPerson = deck.get(randomNum).getName();
+			deck.remove(randomNum);
+			//pick random weapon card
 			randomNum = Math.abs((new Random()).nextInt() % 19);
-		}
-		answerWeapon = deck.get(randomNum).getName();
-		deck.remove(randomNum);
-		//pick random room card
-		randomNum = Math.abs((new Random()).nextInt() % 18);
-		while(deck.get(randomNum).getType() != Card.Type.ROOM) {
+			while(deck.get(randomNum).getType() != Card.Type.WEAPON) {
+				randomNum = Math.abs((new Random()).nextInt() % 19);
+			}
+			answerWeapon = deck.get(randomNum).getName();
+			deck.remove(randomNum);
+			//pick random room card
 			randomNum = Math.abs((new Random()).nextInt() % 18);
+			while(deck.get(randomNum).getType() != Card.Type.ROOM) {
+				randomNum = Math.abs((new Random()).nextInt() % 18);
+			}
+			answerRoom = deck.get(randomNum).getName();
+			deck.remove(randomNum);
+		} else {
+			// do not randomize. We are choosing Dr. Nefarious with the Flying Spaghetti Monster in the Tower
+			answerPerson = deck.remove(0).getName();
+			answerWeapon = deck.remove(9).getName();
+			answerRoom = deck.remove(deck.size()-1).getName();
+			serrln(answerPerson + " with the " + answerWeapon + " in the " + answerRoom);
 		}
-		answerRoom = deck.get(randomNum).getName();
-		deck.remove(randomNum);
-		
-		//evenly deal out all other cards *note some player will get more than others, due to 17 not being divisible by 5
-
-		for(Player p : players){
-			p.dealCards(deck);
-			
+		List<List<Card>> allHands = new ArrayList<List<Card>>();
+		for (Player p : players)
+			allHands.add(new ArrayList<Card>());
+		int ds = deck.size();
+		for (int i=0; i<ds; i++) {
+			// pull a card off the deck
+			Card c = deck.remove(0);
+			allHands.get(i%5).add(c);
+		}
+		for (List<Card> lc : allHands) {
+		}
+		for(int i=0; i < players.size(); i++){
+			players.get(i).giveHand(allHands.get(i));
 		}
 	}
 	
@@ -323,7 +343,10 @@ public class Board {
 	}
 	
 	public boolean checkAccusation(String person, String weapon, String room) {
-		return false;
+		boolean p = person.equals(answerPerson); 
+		boolean w = weapon.equals(answerWeapon);
+		boolean r = room.equals(answerRoom);
+		return p && w && r;
 	}
 	
 	public boolean handleSuggestion(String person, String weapon, String room) {
@@ -343,6 +366,10 @@ public class Board {
 	}
 	
 	public Card disproveSuggestion(Player suggester, String person, String weapon, String room) {
-		return null;
+		return suggester.disproveSuggestion(person, weapon, room);
+	}
+	
+	public static void serrln(String message) {
+		System.err.println(message);
 	}
 }

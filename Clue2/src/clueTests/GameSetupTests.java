@@ -77,8 +77,9 @@ public class GameSetupTests {
 			someoneHasSolutionCards = someoneHasSolutionCards
 				&& brd.solutionContainsCard(c);
 			}
+			System.err.println("A player has " + p.getCards().size() + " cards");
 			everyOneHasSameNUMBERCards = everyOneHasSameNUMBERCards &&
-					p.getCards().size() == 3;
+					(p.getCards().size() == 3 || p.getCards().size() == 4);
 		}
 		assertFalse(someoneHasSolutionCards);
 		assertTrue(everyOneHasSameNUMBERCards);
@@ -86,6 +87,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
+		brd.deal();
 		//will check to make sure a true accusation comes back correct and every field will return false when it is wrong
 		assertTrue(brd.checkAccusation("Dr. Nefarious", "Flying Spaghetti Monster", "Tower"));
 		
@@ -99,9 +101,9 @@ public class GameSetupTests {
 		//checks that over 1000 thousand rolls will hit every square
 		ComputerPlayer comp = new ComputerPlayer();
 		Set<BoardCell> rolls = new HashSet<BoardCell>();
-		
+		comp.calcTargets(6, brd);
 		for (int i=0; i < 1000; i++) {
-			int roll = Math.abs((new Random()).nextInt() % 6);
+			int roll = Math.abs((new Random()).nextInt() % 6+1);
 			rolls.add(comp.pickMove(roll));
 		}
 		boolean containsEach = true;
@@ -122,29 +124,25 @@ public class GameSetupTests {
 		hand.add(new Card("Jim", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
 		hand.add(new Card("M1A1 Abrahms Tank", Card.Type.WEAPON));
-		comp.dealCards(hand);
-		Card c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		comp.giveHand(hand);
+		Card c = brd.disproveSuggestion(comp, "Jim", "The Magic Schoolbus", "Indoor Pool");
 		assertTrue(c.equals(hand.get(0)));
 		//checks a player with weapon card correct
 		hand = new ArrayList<Card>();
 		hand.add(new Card("Jim", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
 		hand.add(new Card("The Magic Schoolbus", Card.Type.WEAPON));
-		comp.dealCards(hand);
-		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		comp.giveHand(hand);
+		c = brd.disproveSuggestion(comp, "Jim", "The Magic Schoolbus", "Indoor Pool");
 		assertTrue(c.equals(hand.get(0)) || c.equals(hand.get(2)));
 		//checks a player with none of the cards so that player returns a null card
 		hand = new ArrayList<Card>();
 		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));
 		hand.add(new Card("Kitchen", Card.Type.ROOM));
 		hand.add(new Card("Cotton Balls", Card.Type.WEAPON));
-		comp.dealCards(hand);
-		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
+		comp.giveHand(hand);
+		c = brd.disproveSuggestion(comp, "Jim", "The Magic Schoolbus", "Indoor Pool");
 		assertTrue(c == null);
-		
-		comp1.add(new ComputerPlayer());
-		
-		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
 		
 		List<Player> hum1 = new ArrayList<Player>();
 		hum1.add(new ComputerPlayer());
@@ -155,9 +153,9 @@ public class GameSetupTests {
 		hand.add(new Card("Dr. Nefarious", Card.Type.PERSON));
 		hand.add(new Card("Indoor Pool", Card.Type.ROOM));
 		hand.add(new Card("M1A1 Abrahms Tank", Card.Type.WEAPON));
-		hum.dealCards(hand);
-		c = brd.disproveSuggestion(new ComputerPlayer(), "Jim", "The Magic Schoolbus", "Indoor Pool");
-		assertTrue(c.equals(hand.get(0)));
+		hum.giveHand(hand);
+		c = brd.disproveSuggestion(hum, "Jim", "The Magic Schoolbus", "Indoor Pool");
+		assertTrue(c.equals(hand.get(1)));
 		
 		hum.disproveSuggestion("Dr. Nefarious", "M1A1 Abrahms Tank", "Indoor Pool");
 	}
